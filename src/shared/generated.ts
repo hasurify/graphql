@@ -27,6 +27,24 @@ export type BooleanComparisonExp = {
   _nin?: InputMaybe<Array<Scalars['Boolean']>>;
 };
 
+export type CreateUserInput = {
+  email?: InputMaybe<Scalars['String']>;
+  first_name: Scalars['String'];
+  id?: InputMaybe<Scalars['Int']>;
+  last_name: Scalars['String'];
+  mobile?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+  role?: InputMaybe<Scalars['String']>;
+  skype?: InputMaybe<Scalars['String']>;
+  title: Scalars['String'];
+  work_phone?: InputMaybe<Scalars['String']>;
+};
+
+export type CreateUserResponse = {
+  __typename?: 'CreateUserResponse';
+  id: Scalars['Int'];
+};
+
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
 export type IntComparisonExp = {
   _eq?: InputMaybe<Scalars['Int']>;
@@ -39,6 +57,16 @@ export type IntComparisonExp = {
   _neq?: InputMaybe<Scalars['Int']>;
   _nin?: InputMaybe<Array<Scalars['Int']>>;
 };
+
+export type LoginResponse = {
+  __typename?: 'LoginResponse';
+  token?: Maybe<Scalars['String']>;
+};
+
+export type LoginType =
+  | 'FACEBOOK'
+  | 'GOOGLE'
+  | 'PASSWORD';
 
 /** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
 export type StringComparisonExp = {
@@ -83,6 +111,7 @@ export type CursorOrdering =
 /** mutation root */
 export type MutationRoot = {
   __typename?: 'mutation_root';
+  createUser?: Maybe<CreateUserResponse>;
   /** delete data from the table: "users" */
   delete_users?: Maybe<UsersMutationResponse>;
   /** delete single row from the table: "users" */
@@ -91,12 +120,19 @@ export type MutationRoot = {
   insert_users?: Maybe<UsersMutationResponse>;
   /** insert a single row into the table: "users" */
   insert_users_one?: Maybe<Users>;
+  login: LoginResponse;
   /** update data of the table: "users" */
   update_users?: Maybe<UsersMutationResponse>;
   /** update single row of the table: "users" */
   update_users_by_pk?: Maybe<Users>;
   /** update multiples rows of table: "users" */
   update_users_many?: Maybe<Array<Maybe<UsersMutationResponse>>>;
+};
+
+
+/** mutation root */
+export type MutationRootCreateUserArgs = {
+  input: CreateUserInput;
 };
 
 
@@ -123,6 +159,15 @@ export type MutationRootInsertUsersArgs = {
 export type MutationRootInsertUsersOneArgs = {
   object: UsersInsertInput;
   on_conflict?: InputMaybe<UsersOnConflict>;
+};
+
+
+/** mutation root */
+export type MutationRootLoginArgs = {
+  access_token?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  login_type: LoginType;
+  password?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -619,3 +664,10 @@ export type UpdateUserMutationVariables = Exact<{
 
 
 export type UpdateUserMutation = { __typename?: 'mutation_root', update_users_by_pk?: { __typename?: 'users', id: number, first_name: string, last_name: string, title: string, email: string, password: string, skype?: string | null, mobile?: string | null, work_phone?: string | null, is_active: boolean, role: any } | null };
+
+export type GetUserByEmailQueryVariables = Exact<{
+  email: Scalars['String'];
+}>;
+
+
+export type GetUserByEmailQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: number, first_name: string, last_name: string, title: string, email: string, password: string, skype?: string | null, mobile?: string | null, work_phone?: string | null, is_active: boolean, role: any }> };

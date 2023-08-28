@@ -1,4 +1,4 @@
-import { GET_USER, mutate, query, UPDATE_USER } from '..';
+import { GET_USER, mutate, query, UPDATE_USER, GET_USER_BY_EMAIL } from '..';
 import { BadRequestError } from '@hasurify/util';
 import { Users, UsersSetInput } from '../../shared/generated';
 
@@ -33,4 +33,14 @@ export const updateUser = async (
   });
 
   return data?.update_users_by_pk || null;
+};
+
+export const getUserByEmail = async (email: string): Promise<Users> => {
+  const { data } = await query<{ users: Users[] }>({
+    query: GET_USER_BY_EMAIL,
+    variables: { email },
+  });
+
+  const [user] = data?.users || [];
+  return user;
 };

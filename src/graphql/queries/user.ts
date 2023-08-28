@@ -33,3 +33,12 @@ export const UPDATE_USER = gql`
     }
   }
 `;
+
+export const GET_USER_BY_EMAIL = gql`
+  ${USER_FRAGMENT}
+  query GetUserByEmail($email: String!) {
+    users(where: { email: { _eq: $email } }) {
+      ...user_fragment
+    }
+  }
+`;

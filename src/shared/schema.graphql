@@ -28,6 +28,23 @@ input Boolean_comparison_exp {
   _nin: [Boolean!]
 }
 
+input CreateUserInput {
+  email: String
+  first_name: String!
+  id: Int
+  last_name: String!
+  mobile: String
+  password: String
+  role: String
+  skype: String
+  title: String!
+  work_phone: String
+}
+
+type CreateUserResponse {
+  id: Int!
+}
+
 """
 Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
 """
@@ -41,6 +58,16 @@ input Int_comparison_exp {
   _lte: Int
   _neq: Int
   _nin: [Int!]
+}
+
+type LoginResponse {
+  token: String
+}
+
+enum LoginType {
+  FACEBOOK
+  GOOGLE
+  PASSWORD
 }
 
 """
@@ -107,6 +134,8 @@ enum cursor_ordering {
 
 """mutation root"""
 type mutation_root {
+  createUser(input: CreateUserInput!): CreateUserResponse
+
   """
   delete data from the table: "users"
   """
@@ -141,6 +170,7 @@ type mutation_root {
     """upsert condition"""
     on_conflict: users_on_conflict
   ): users
+  login(access_token: String, email: String, login_type: LoginType!, password: String): LoginResponse!
 
   """
   update data of the table: "users"

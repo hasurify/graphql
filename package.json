@@ -1,0 +1,94 @@
+{
+  "name": "@hasurify/graphql",
+  "version": "1.0.0",
+  "description": "Hasurify GraphQL Library",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rimraf dist",
+    "dev": "tsc -w",
+    "tsc": "tsc --build",
+    "prebuild": "npm run clean",
+    "build": "npm run tsc",
+    "prepare": "npm run build",
+    "lint": "eslint 'src/**/*.{js,ts,jsx,tsx}' --quiet --fix",
+    "format": "prettier --ignore-path=.gitignore --loglevel=error --write ./src",
+    "generate": "graphql-codegen --config codegen.js",
+    "postgenerate": "node filterGenTypes.js",
+    "commit": "cz",
+    "semantic-release:alpha": "semantic-release --branches chore/semantic-release",
+    "semantic-release": "semantic-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:hasurify/graphql.git"
+  },
+  "author": "KenStack Team",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/client": "^3.5.6",
+    "@graphql-codegen/cli": "^2.3.0",
+    "@graphql-codegen/introspection": "^4.0.0",
+    "@graphql-codegen/schema-ast": "^4.0.0",
+    "@graphql-codegen/typescript": "^2.4.1",
+    "@graphql-codegen/typescript-operations": "^2.2.1",
+    "@graphql-codegen/typescript-react-apollo": "^3.3.7",
+    "@hasurify/util": "^1.0.0",
+    "cross-fetch": "^3.1.6",
+    "graphql": "^16.1.0"
+  },
+  "devDependencies": {
+    "@semantic-release/git": "^10.0.1",
+    "@typescript-eslint/eslint-plugin": "^4.28.4",
+    "@typescript-eslint/parser": "^4.28.4",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^7.6.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-import-helpers": "^1.1.0",
+    "eslint-plugin-jest": "^24.3.6",
+    "eslint-plugin-prettier": "^3.4.0",
+    "husky": "^7.0.1",
+    "lint-staged": "^11.0.1",
+    "module-alias": "^2.2.2",
+    "prettier": "^2.3.2",
+    "rimraf": "^3.0.2",
+    "semantic-release": "^21.0.7",
+    "ts-jest": "^27.0.3",
+    "tslint": "^6.1.3",
+    "typescript": "^5.0.4"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx}": [
+      "npm run lint",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "lint-staged"
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/hasurify/graphql/issues"
+  },
+  "homepage": "https://github.com/hasurify/graphql#readme",
+  "keywords": []
+}

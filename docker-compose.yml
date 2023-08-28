@@ -1,0 +1,35 @@
+version: '3.9'
+services:
+  hasurify-graphql-faker:
+    build:
+      context: .
+      dockerfile: ./graphql-faker/Dockerfile
+    container_name: hasurify-graphql-faker
+    restart: always
+    ports:
+      - 4002:9002
+    volumes:
+      - ./src/shared/schema.graphql:/home/node/app/schema.graphql
+      - /home/node/app/node_modules
+    working_dir: /home/node/app
+    networks:
+      hasurify_network:
+        ipv4_address: 172.0.0.5
+
+  hasurify-graphql-voyager:
+    build:
+      context: .
+      dockerfile: ./graphql-voyager/Dockerfile
+    container_name: hasurify-graphql-voyager
+    restart: always
+    ports:
+      - 4003:3000
+    volumes:
+      - /home/node/app/node_modules
+    working_dir: /home/node/app
+    networks:
+      hasurify_network:
+        ipv4_address: 172.0.0.6
+networks:
+  hasurify_network:
+    external: true

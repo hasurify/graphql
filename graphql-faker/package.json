@@ -1,0 +1,28 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "KenStack Team",
+  "license": "ISC",
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "graphql-faker": "^2.0.0-rc.25"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://git@github.com/hasurify/graphql.git"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "bugs": {
+    "url": "https://github.com/hasurify/graphql/issues"
+  },
+  "homepage": "https://github.com/hasurify/graphql#readme"
+}

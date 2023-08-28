@@ -1,0 +1,95 @@
+name: Release NPM package
+on:
+  pull_request:
+    branches: [alpha, beta, master]
+  push:
+    branches: [alpha, beta, master]
+
+# permissions:
+#   contents: read # for checkout
+#   pull-requests: write # to be able to comment on released pull requests
+
+env:
+  NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+
+jobs:
+  detect_changes:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    outputs:
+      src: ${{ steps.detect_changes.outputs.src }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: detect_changes
+        with:
+          filters: |
+            src:
+              - 'src/**'
+              - 'package.json'
+              - 'yarn.lock'
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    if: needs.detect_changes.outputs.src == 'true'
+    needs: [detect_changes]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      # Setup .npmrc file to publish to GitHub Packages
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - name: Install dependencies
+        run: |
+          echo -e "//npm.pkg.github.com/:_authToken=$NPM_TOKEN\n\
+            @hasurify:registry=https://npm.pkg.github.com/" > ~/.npmrc
+          yarn
+        env:
+          NPM_TOKEN: ${{ env.NPM_TOKEN }}
+      - name: Build
+        run: yarn build
+
+  set_environment:
+    name: Set environment name
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref_name == 'alpha' || github.ref_name == 'beta' || github.ref_name == 'master')
+    needs: [build, detect_changes]
+    # Map a step output to a job output
+    outputs:
+      env_name: ${{ steps.set_env.outputs.env_name }}
+    steps:
+      - id: set_env
+        run: echo "env_name=${{github.ref_name}}" >> $GITHUB_OUTPUT
+
+  release:
+    name: Release ${{needs.set_environment.outputs.env_name}}
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && needs.detect_changes.outputs.src == 'true'
+    needs: [detect_changes, set_environment]
+    environment:
+      name: ${{needs.set_environment.outputs.env_name}}
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      # Setup .npmrc file to publish to GitHub Packages
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - name: Install dependencies
+        run: |
+          echo -e "//npm.pkg.github.com/:_authToken=$NPM_TOKEN\n\
+            @hasurify:registry=https://npm.pkg.github.com/" > ~/.npmrc
+          yarn
+        env:
+          NPM_TOKEN: ${{ env.NPM_TOKEN }}
+      - name: Release
+        run: yarn semantic-release
+        env:
+          GITHUB_TOKEN: ${{ env.NPM_TOKEN }}

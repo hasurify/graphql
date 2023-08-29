@@ -48,7 +48,7 @@ export const UPSERT_USER = gql`
     insert_users_one(
       object: $input
       on_conflict: {
-        constraint: users_pkey
+        constraint: users_email_unique
         update_columns: [
           updated_at
           first_name

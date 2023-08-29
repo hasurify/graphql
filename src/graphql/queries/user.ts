@@ -42,3 +42,33 @@ export const GET_USER_BY_EMAIL = gql`
     }
   }
 `;
+
+export const UPSERT_USER = gql`
+  mutation UpsertUser($input: users_insert_input!) {
+    insert_users_one(
+      object: $input
+      on_conflict: {
+        constraint: users_pkey
+        update_columns: [
+          updated_at
+          first_name
+          last_name
+          skype
+          mobile
+          work_phone
+        ]
+      }
+    ) {
+      email
+      first_name
+      is_active
+      last_name
+      mobile
+      password
+      role
+      skype
+      title
+      work_phone
+    }
+  }
+`;

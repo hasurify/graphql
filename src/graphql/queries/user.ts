@@ -59,6 +59,7 @@ export const UPSERT_USER = gql`
         ]
       }
     ) {
+      id
       email
       first_name
       is_active

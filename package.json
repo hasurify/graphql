@@ -1,6 +1,6 @@
 {
   "name": "@hasurify/graphql",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Hasurify GraphQL Library",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

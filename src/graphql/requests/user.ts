@@ -1,6 +1,13 @@
-import { GET_USER, mutate, query, UPDATE_USER, GET_USER_BY_EMAIL } from '..';
+import {
+  GET_USER,
+  mutate,
+  query,
+  UPDATE_USER,
+  GET_USER_BY_EMAIL,
+  UPSERT_USER,
+} from '..';
 import { BadRequestError } from '@hasurify/util';
-import { Users, UsersSetInput } from '../../shared/generated';
+import { Users, UsersInsertInput, UsersSetInput } from '../../shared/generated';
 
 export const getUser = async (userId: Number): Promise<Users> => {
   const { data } = await query<{ users_by_pk: Users }>({
@@ -43,4 +50,21 @@ export const getUserByEmail = async (email: string): Promise<Users> => {
 
   const [user] = data?.users || [];
   return user;
+};
+
+export const upsertUser = async (input: UsersInsertInput): Promise<Users> => {
+  const { data } = await mutate<{ insert_users_one: Users }>({
+    mutation: UPSERT_USER,
+    variables: { input },
+  });
+
+  if (!data?.insert_users_one) {
+    throw new BadRequestError(
+      `Couldn't insert the new user`,
+      400,
+      'api:user.upsert_user_failed'
+    );
+  }
+
+  return data.insert_users_one;
 };
